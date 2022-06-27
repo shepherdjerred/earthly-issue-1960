@@ -10,5 +10,5 @@ create:
   END
 
 create.fixed:
-  RUN --no-cache echo $(date) > /root/artifact
+  RUN --no-cache ! [ -e "/root/artifact" ] && echo $(date) > /root/artifact || echo "file exists; doing nothing"
   SAVE ARTIFACT /root/artifact /artifact AS LOCAL ./artifact

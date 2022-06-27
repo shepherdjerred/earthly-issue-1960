@@ -51,12 +51,12 @@ To enable pushing use
  4. Local Output 🎁
 ————————————————————————————————————————————————————————————————————————————————
 
-Artifact ./creator+create/artifact output as ./artifact
+Artifact github.com/shepherdjerred/earthly-issue-1960/creator:main+create/artifact output as ./artifact
 
 
 ========================== 🌍 Earthly Build  ✅ SUCCESS ==========================
 
-Shareable link: https://ci.earthly.dev/logs?logId=d67ca50e-f6dd-4a33-bd53-98e5f14836d2
+Shareable link: https://ci.earthly.dev/logs?logId=5f8ae050-0c85-454c-9b39-11ae201e24d7
 + check
 + '[' -e creator/artifact ']'
 + echo 'local file exists'
@@ -83,9 +83,9 @@ local file exists
       ./creator+base | --> COPY --if-exists ./artifact /root/artifact
     ./creator+create | --> IF --no-cache ! [ -e "/root/artifact" ]
   ./consumer+consume | --> COPY ../creator+create/artifact ./artifact
-  ./consumer+consume | WARN: (COPY ../creator+create/artifact ./artifact) lstat /tmp/buildkit-mount1281718289/artifact: no such file or directory
-Shareable link: https://ci.earthly.dev/logs?logId=1a6863b6-cc15-4cd8-9925-695449695430
-Error: build target: build main: failed to solve: lstat /tmp/buildkit-mount1281718289/artifact: no such file or directory
+  ./consumer+consume | WARN: (COPY ../creator+create/artifact ./artifact) lstat /tmp/buildkit-mount2346700523/artifact: no such file or directory
+Shareable link: https://ci.earthly.dev/logs?logId=7592c2f3-8e21-4ebe-ad99-d47c2b4629a0
+Error: build target: build main: failed to solve: lstat /tmp/buildkit-mount2346700523/artifact: no such file or directory
 + '[' 1 = 1 ']'
 + echo 'TEST CASE #1 FAILED'
 TEST CASE #1 FAILED
@@ -126,7 +126,7 @@ test case #2, run consumer+consume twice. local file should be created one first
     ./creator+create | --> SAVE ARTIFACT /root/artifact ./creator+create/artifact
   ./consumer+consume | --> COPY ../creator+create/artifact ./artifact
   ./consumer+consume | --> RUN cat artifact
-  ./consumer+consume | Mon Jun 27 23:23:38 UTC 2022
+  ./consumer+consume | Mon Jun 27 23:43:15 UTC 2022
               output | --> exporting outputs
 
 
@@ -146,7 +146,7 @@ To enable pushing use
 
 ========================== 🌍 Earthly Build  ✅ SUCCESS ==========================
 
-Shareable link: https://ci.earthly.dev/logs?logId=089cf1b1-420e-4a34-a595-936087914f7e
+Shareable link: https://ci.earthly.dev/logs?logId=7cfb353e-0b22-4eb1-b016-95645af37dc5
 + '[' 0 = 1 ']'
 + echo 'TEST CASE #2.1 PASSED'
 TEST CASE #2.1 PASSED
@@ -177,7 +177,7 @@ skip reset and re-run
     ./creator+create | --> SAVE ARTIFACT /root/artifact ./creator+create/artifact
   ./consumer+consume | --> COPY ../creator+create/artifact ./artifact
   ./consumer+consume | --> RUN cat artifact
-  ./consumer+consume | Mon Jun 27 23:23:44 UTC 2022
+  ./consumer+consume | Mon Jun 27 23:43:22 UTC 2022
               output | --> exporting outputs
 
 
@@ -197,7 +197,7 @@ To enable pushing use
 
 ========================== 🌍 Earthly Build  ✅ SUCCESS ==========================
 
-Shareable link: https://ci.earthly.dev/logs?logId=3f223112-b210-4a14-ac78-c08c8b92e7c9
+Shareable link: https://ci.earthly.dev/logs?logId=28c6764e-0937-450d-bcc1-77d4ec1caac2
 + '[' 0 = 1 ']'
 + echo 'TEST CASE #2.2 PASSED'
 TEST CASE #2.2 PASSED
@@ -240,7 +240,7 @@ test case #1. run creator+create directly and then consumer+consume. local file 
              context | transferred 0 file(s) for context ./creator (0 B, 0 file/dir stats)
              context | [A[██████████] 100% transferring ./creator:[K
       ./creator+base | --> COPY --if-exists ./artifact /root/artifact
-./creator+create.fixed | --> RUN --no-cache echo $(date) > /root/artifact
+./creator+create.fixed | --> RUN --no-cache ! [ -e "/root/artifact" ] && echo $(date) > /root/artifact || echo "file exists; doing nothing"
 ./creator+create.fixed | --> SAVE ARTIFACT /root/artifact ./creator+create.fixed/artifact AS LOCAL ./artifact
               output | --> exporting outputs
 
@@ -257,12 +257,12 @@ To enable pushing use
  4. Local Output 🎁
 ————————————————————————————————————————————————————————————————————————————————
 
-Artifact ./creator+create.fixed/artifact output as ./artifact
+Artifact github.com/shepherdjerred/earthly-issue-1960/creator:main+create.fixed/artifact output as ./artifact
 
 
 ========================== 🌍 Earthly Build  ✅ SUCCESS ==========================
 
-Shareable link: https://ci.earthly.dev/logs?logId=07adccc8-abb7-498e-99fb-783af3ab7938
+Shareable link: https://ci.earthly.dev/logs?logId=23e57c59-d709-41a6-b563-47f9ecb1a56b
 + check
 + '[' -e creator/artifact ']'
 + echo 'local file exists'
@@ -279,19 +279,20 @@ local file exists
 ————————————————————————————————————————————————————————————————————————————————
 
               alpine | --> Load metadata linux/arm64
-             context | --> local context ./creator
       ./creator+base | --> FROM alpine
+             context | --> local context ./creator
       ./creator+base | [          ]   0% resolve docker.io/library/alpine@sha256:686d8c9dfa6f3ccfc8230bc3178d23f84eeaf7e457f36f271ab1acc53015037c[K
       ./creator+base | [A[██████████] 100% resolve docker.io/library/alpine@sha256:686d8c9dfa6f3ccfc8230bc3178d23f84eeaf7e457f36f271ab1acc53015037c[K
              context | [          ]   0% transferring ./creator:[K
              context | transferred 1 file(s) for context ./creator (60 B, 1 file/dir stats)
              context | [A[██████████] 100% transferring ./creator:[K
       ./creator+base | --> COPY --if-exists ./artifact /root/artifact
-./creator+create.fixed | --> RUN --no-cache echo $(date) > /root/artifact
-./creator+create.fixed | --> SAVE ARTIFACT /root/artifact ./creator+create.fixed/artifact
+./creator+create.fixed | --> RUN --no-cache ! [ -e "/root/artifact" ] && echo $(date) > /root/artifact || echo "file exists; doing nothing"
+./creator+create.fixed | file exists; doing nothing
+./creator+create.fixed | *cached* --> SAVE ARTIFACT /root/artifact ./creator+create.fixed/artifact
 ./consumer+consume.fixed | --> COPY ../creator+create.fixed/artifact ./artifact
 ./consumer+consume.fixed | --> RUN cat artifact
-./consumer+consume.fixed | Mon Jun 27 23:24:15 UTC 2022
+./consumer+consume.fixed | Mon Jun 27 23:43:45 UTC 2022
               output | --> exporting outputs
 
 
@@ -311,7 +312,7 @@ To enable pushing use
 
 ========================== 🌍 Earthly Build  ✅ SUCCESS ==========================
 
-Shareable link: https://ci.earthly.dev/logs?logId=630769aa-3bd0-49b6-b848-a15afb29b883
+Shareable link: https://ci.earthly.dev/logs?logId=f364d3a0-cbc3-4d5d-b318-a53c2d6a342b
 + '[' 0 = 1 ']'
 + echo 'TEST CASE #1 PASSED'
 TEST CASE #1 PASSED
@@ -347,11 +348,11 @@ test case #2, run consumer+consume twice. local file should be created one first
              context | transferred 0 file(s) for context ./creator (0 B, 0 file/dir stats)
              context | [A[██████████] 100% transferring ./creator:[K
       ./creator+base | --> COPY --if-exists ./artifact /root/artifact
-./creator+create.fixed | --> RUN --no-cache echo $(date) > /root/artifact
+./creator+create.fixed | --> RUN --no-cache ! [ -e "/root/artifact" ] && echo $(date) > /root/artifact || echo "file exists; doing nothing"
 ./creator+create.fixed | --> SAVE ARTIFACT /root/artifact ./creator+create.fixed/artifact
 ./consumer+consume.fixed | --> COPY ../creator+create.fixed/artifact ./artifact
 ./consumer+consume.fixed | --> RUN cat artifact
-./consumer+consume.fixed | Mon Jun 27 23:24:38 UTC 2022
+./consumer+consume.fixed | Mon Jun 27 23:44:15 UTC 2022
               output | --> exporting outputs
 
 
@@ -371,7 +372,7 @@ To enable pushing use
 
 ========================== 🌍 Earthly Build  ✅ SUCCESS ==========================
 
-Shareable link: https://ci.earthly.dev/logs?logId=fec501b2-e8fd-4bc1-91a7-129522658787
+Shareable link: https://ci.earthly.dev/logs?logId=e0f7ab37-9e12-4470-9304-5b1f18922dc9
 + '[' 0 = 1 ']'
 + echo 'TEST CASE #2.1 PASSED'
 TEST CASE #2.1 PASSED
@@ -397,11 +398,11 @@ skip reset and re-run
              context | transferred 0 file(s) for context ./creator (0 B, 0 file/dir stats)
              context | [A[██████████] 100% transferring ./creator:[K
       ./creator+base | *cached* --> COPY --if-exists ./artifact /root/artifact
-./creator+create.fixed | --> RUN --no-cache echo $(date) > /root/artifact
+./creator+create.fixed | --> RUN --no-cache ! [ -e "/root/artifact" ] && echo $(date) > /root/artifact || echo "file exists; doing nothing"
 ./creator+create.fixed | --> SAVE ARTIFACT /root/artifact ./creator+create.fixed/artifact
 ./consumer+consume.fixed | --> COPY ../creator+create.fixed/artifact ./artifact
 ./consumer+consume.fixed | --> RUN cat artifact
-./consumer+consume.fixed | Mon Jun 27 23:24:45 UTC 2022
+./consumer+consume.fixed | Mon Jun 27 23:44:22 UTC 2022
               output | --> exporting outputs
 
 
@@ -421,7 +422,7 @@ To enable pushing use
 
 ========================== 🌍 Earthly Build  ✅ SUCCESS ==========================
 
-Shareable link: https://ci.earthly.dev/logs?logId=a66f672a-a680-4800-baf4-b6f3d7d510e6
+Shareable link: https://ci.earthly.dev/logs?logId=baad4e2c-8114-45e1-83ca-9282498c69df
 + '[' 0 = 1 ']'
 + echo 'TEST CASE #2.2 PASSED'
 TEST CASE #2.2 PASSED
