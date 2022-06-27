@@ -1,0 +1,14 @@
+VERSION 0.6
+FROM alpine
+
+COPY --if-exists ./artifact /root/artifact
+
+create:
+  IF --no-cache ! [ -e "/root/artifact" ]
+    RUN --no-cache echo $(date) > /root/artifact
+    SAVE ARTIFACT /root/artifact /artifact AS LOCAL ./artifact
+  END
+
+create.fixed:
+  RUN --no-cache echo $(date) > /root/artifact
+  SAVE ARTIFACT /root/artifact /artifact AS LOCAL ./artifact

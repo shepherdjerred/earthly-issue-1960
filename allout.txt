@@ -1,0 +1,431 @@
++ run ''
++ local suffix=
++ echo 'SUFFIX '
+SUFFIX 
++ echo 'test case #1. run creator+create directly and then consumer+consume. local file should be created and used.'
+test case #1. run creator+create directly and then consumer+consume. local file should be created and used.
++ reset
++ rm -rfv creator/artifact
++ earthly prune --reset --all
+           buildkitd | Restarting buildkit daemon with reset command...
+           buildkitd | ... Done. Future runs will be faster.
++ earthly ./creator+create
+
+ 1. Init 🚀
+————————————————————————————————————————————————————————————————————————————————
+
+           buildkitd | Found buildkit daemon as docker container (earthly-buildkitd)
+
+
+ 2. Build 🔧
+————————————————————————————————————————————————————————————————————————————————
+
+              alpine | --> Load metadata linux/arm64
+             context | --> local context ./creator
+      ./creator+base | --> FROM alpine
+      ./creator+base | [          ]   0% resolve docker.io/library/alpine@sha256:686d8c9dfa6f3ccfc8230bc3178d23f84eeaf7e457f36f271ab1acc53015037c[K
+      ./creator+base | [A[██████████] 100% resolve docker.io/library/alpine@sha256:686d8c9dfa6f3ccfc8230bc3178d23f84eeaf7e457f36f271ab1acc53015037c[K
+      ./creator+base | [          ]   0% sha256:b3c136eddcbf2003d3180787cef00f39d46b9fd9e4623178282ad6a8d63ad3b0[K
+      ./creator+base | [A[██████████] 100% sha256:b3c136eddcbf2003d3180787cef00f39d46b9fd9e4623178282ad6a8d63ad3b0[K
+      ./creator+base | [          ]   0% extracting sha256:b3c136eddcbf2003d3180787cef00f39d46b9fd9e4623178282ad6a8d63ad3b0[K
+      ./creator+base | [A[██████████] 100% extracting sha256:b3c136eddcbf2003d3180787cef00f39d46b9fd9e4623178282ad6a8d63ad3b0[K
+             context | [          ]   0% transferring ./creator:[K
+             context | transferred 0 file(s) for context ./creator (0 B, 0 file/dir stats)
+             context | [A[██████████] 100% transferring ./creator:[K
+      ./creator+base | --> COPY --if-exists ./artifact /root/artifact
+    ./creator+create | --> IF --no-cache ! [ -e "/root/artifact" ]
+    ./creator+create | --> RUN --no-cache echo $(date) > /root/artifact
+    ./creator+create | --> SAVE ARTIFACT /root/artifact ./creator+create/artifact AS LOCAL ./artifact
+              output | --> exporting outputs
+
+
+ 3. Push ⏫ (disabled)
+————————————————————————————————————————————————————————————————————————————————
+
+To enable pushing use
+
+		earthly --push ...
+
+
+
+ 4. Local Output 🎁
+————————————————————————————————————————————————————————————————————————————————
+
+Artifact ./creator+create/artifact output as ./artifact
+
+
+========================== 🌍 Earthly Build  ✅ SUCCESS ==========================
+
+Shareable link: https://ci.earthly.dev/logs?logId=d67ca50e-f6dd-4a33-bd53-98e5f14836d2
++ check
++ '[' -e creator/artifact ']'
++ echo 'local file exists'
+local file exists
++ earthly ./consumer+consume
+
+ 1. Init 🚀
+————————————————————————————————————————————————————————————————————————————————
+
+           buildkitd | Found buildkit daemon as docker container (earthly-buildkitd)
+
+
+ 2. Build 🔧
+————————————————————————————————————————————————————————————————————————————————
+
+              alpine | --> Load metadata linux/arm64
+             context | --> local context ./creator
+      ./creator+base | --> FROM alpine
+      ./creator+base | [          ]   0% resolve docker.io/library/alpine@sha256:686d8c9dfa6f3ccfc8230bc3178d23f84eeaf7e457f36f271ab1acc53015037c[K
+      ./creator+base | [A[██████████] 100% resolve docker.io/library/alpine@sha256:686d8c9dfa6f3ccfc8230bc3178d23f84eeaf7e457f36f271ab1acc53015037c[K
+             context | [          ]   0% transferring ./creator:[K
+             context | transferred 1 file(s) for context ./creator (60 B, 1 file/dir stats)
+             context | [A[██████████] 100% transferring ./creator:[K
+      ./creator+base | --> COPY --if-exists ./artifact /root/artifact
+    ./creator+create | --> IF --no-cache ! [ -e "/root/artifact" ]
+  ./consumer+consume | --> COPY ../creator+create/artifact ./artifact
+  ./consumer+consume | WARN: (COPY ../creator+create/artifact ./artifact) lstat /tmp/buildkit-mount1281718289/artifact: no such file or directory
+Shareable link: https://ci.earthly.dev/logs?logId=1a6863b6-cc15-4cd8-9925-695449695430
+Error: build target: build main: failed to solve: lstat /tmp/buildkit-mount1281718289/artifact: no such file or directory
++ '[' 1 = 1 ']'
++ echo 'TEST CASE #1 FAILED'
+TEST CASE #1 FAILED
++ reset
++ rm -rfv creator/artifact
+creator/artifact
++ earthly prune --reset --all
+           buildkitd | Restarting buildkit daemon with reset command...
+           buildkitd | ... Done. Future runs will be faster.
++ echo 'test case #2, run consumer+consume twice. local file should be created one first run and re-used on second run.'
+test case #2, run consumer+consume twice. local file should be created one first run and re-used on second run.
++ earthly ./consumer+consume
+
+ 1. Init 🚀
+————————————————————————————————————————————————————————————————————————————————
+
+           buildkitd | Found buildkit daemon as docker container (earthly-buildkitd)
+
+
+ 2. Build 🔧
+————————————————————————————————————————————————————————————————————————————————
+
+              alpine | --> Load metadata linux/arm64
+             context | --> local context ./creator
+      ./creator+base | --> FROM alpine
+      ./creator+base | [          ]   0% resolve docker.io/library/alpine@sha256:686d8c9dfa6f3ccfc8230bc3178d23f84eeaf7e457f36f271ab1acc53015037c[K
+      ./creator+base | [A[██████████] 100% resolve docker.io/library/alpine@sha256:686d8c9dfa6f3ccfc8230bc3178d23f84eeaf7e457f36f271ab1acc53015037c[K
+      ./creator+base | [          ]   0% sha256:b3c136eddcbf2003d3180787cef00f39d46b9fd9e4623178282ad6a8d63ad3b0[K
+      ./creator+base | [A[██████████] 100% sha256:b3c136eddcbf2003d3180787cef00f39d46b9fd9e4623178282ad6a8d63ad3b0[K
+      ./creator+base | [          ]   0% extracting sha256:b3c136eddcbf2003d3180787cef00f39d46b9fd9e4623178282ad6a8d63ad3b0[K
+      ./creator+base | [A[██████████] 100% extracting sha256:b3c136eddcbf2003d3180787cef00f39d46b9fd9e4623178282ad6a8d63ad3b0[K
+             context | [          ]   0% transferring ./creator:[K
+             context | transferred 0 file(s) for context ./creator (0 B, 0 file/dir stats)
+             context | [A[██████████] 100% transferring ./creator:[K
+      ./creator+base | --> COPY --if-exists ./artifact /root/artifact
+    ./creator+create | --> IF --no-cache ! [ -e "/root/artifact" ]
+    ./creator+create | --> RUN --no-cache echo $(date) > /root/artifact
+    ./creator+create | --> SAVE ARTIFACT /root/artifact ./creator+create/artifact
+  ./consumer+consume | --> COPY ../creator+create/artifact ./artifact
+  ./consumer+consume | --> RUN cat artifact
+  ./consumer+consume | Mon Jun 27 23:23:38 UTC 2022
+              output | --> exporting outputs
+
+
+ 3. Push ⏫ (disabled)
+————————————————————————————————————————————————————————————————————————————————
+
+To enable pushing use
+
+		earthly --push ...
+
+
+
+ 4. Local Output 🎁
+————————————————————————————————————————————————————————————————————————————————
+
+
+
+========================== 🌍 Earthly Build  ✅ SUCCESS ==========================
+
+Shareable link: https://ci.earthly.dev/logs?logId=089cf1b1-420e-4a34-a595-936087914f7e
++ '[' 0 = 1 ']'
++ echo 'TEST CASE #2.1 PASSED'
+TEST CASE #2.1 PASSED
++ echo 'skip reset and re-run'
+skip reset and re-run
++ earthly ./consumer+consume
+
+ 1. Init 🚀
+————————————————————————————————————————————————————————————————————————————————
+
+           buildkitd | Found buildkit daemon as docker container (earthly-buildkitd)
+
+
+ 2. Build 🔧
+————————————————————————————————————————————————————————————————————————————————
+
+              alpine | --> Load metadata linux/arm64
+             context | --> local context ./creator
+      ./creator+base | --> FROM alpine
+      ./creator+base | [          ]   0% resolve docker.io/library/alpine@sha256:686d8c9dfa6f3ccfc8230bc3178d23f84eeaf7e457f36f271ab1acc53015037c[K
+      ./creator+base | [A[██████████] 100% resolve docker.io/library/alpine@sha256:686d8c9dfa6f3ccfc8230bc3178d23f84eeaf7e457f36f271ab1acc53015037c[K
+             context | [          ]   0% transferring ./creator:[K
+             context | transferred 0 file(s) for context ./creator (0 B, 0 file/dir stats)
+             context | [A[██████████] 100% transferring ./creator:[K
+      ./creator+base | *cached* --> COPY --if-exists ./artifact /root/artifact
+    ./creator+create | --> IF --no-cache ! [ -e "/root/artifact" ]
+    ./creator+create | --> RUN --no-cache echo $(date) > /root/artifact
+    ./creator+create | --> SAVE ARTIFACT /root/artifact ./creator+create/artifact
+  ./consumer+consume | --> COPY ../creator+create/artifact ./artifact
+  ./consumer+consume | --> RUN cat artifact
+  ./consumer+consume | Mon Jun 27 23:23:44 UTC 2022
+              output | --> exporting outputs
+
+
+ 3. Push ⏫ (disabled)
+————————————————————————————————————————————————————————————————————————————————
+
+To enable pushing use
+
+		earthly --push ...
+
+
+
+ 4. Local Output 🎁
+————————————————————————————————————————————————————————————————————————————————
+
+
+
+========================== 🌍 Earthly Build  ✅ SUCCESS ==========================
+
+Shareable link: https://ci.earthly.dev/logs?logId=3f223112-b210-4a14-ac78-c08c8b92e7c9
++ '[' 0 = 1 ']'
++ echo 'TEST CASE #2.2 PASSED'
+TEST CASE #2.2 PASSED
++ check
++ '[' -e creator/artifact ']'
++ echo 'local file doesn'\''t exist'
+local file doesn't exist
++ run .fixed
++ local suffix=.fixed
++ echo 'SUFFIX .fixed'
+SUFFIX .fixed
++ echo 'test case #1. run creator+create directly and then consumer+consume. local file should be created and used.'
+test case #1. run creator+create directly and then consumer+consume. local file should be created and used.
++ reset
++ rm -rfv creator/artifact
++ earthly prune --reset --all
+           buildkitd | Restarting buildkit daemon with reset command...
+           buildkitd | ... Done. Future runs will be faster.
++ earthly ./creator+create.fixed
+
+ 1. Init 🚀
+————————————————————————————————————————————————————————————————————————————————
+
+           buildkitd | Found buildkit daemon as docker container (earthly-buildkitd)
+
+
+ 2. Build 🔧
+————————————————————————————————————————————————————————————————————————————————
+
+              alpine | --> Load metadata linux/arm64
+      ./creator+base | --> FROM alpine
+             context | --> local context ./creator
+      ./creator+base | [          ]   0% resolve docker.io/library/alpine@sha256:686d8c9dfa6f3ccfc8230bc3178d23f84eeaf7e457f36f271ab1acc53015037c[K
+      ./creator+base | [A[██████████] 100% resolve docker.io/library/alpine@sha256:686d8c9dfa6f3ccfc8230bc3178d23f84eeaf7e457f36f271ab1acc53015037c[K
+      ./creator+base | [          ]   0% sha256:b3c136eddcbf2003d3180787cef00f39d46b9fd9e4623178282ad6a8d63ad3b0[K
+      ./creator+base | [A[██████████] 100% sha256:b3c136eddcbf2003d3180787cef00f39d46b9fd9e4623178282ad6a8d63ad3b0[K
+      ./creator+base | [          ]   0% extracting sha256:b3c136eddcbf2003d3180787cef00f39d46b9fd9e4623178282ad6a8d63ad3b0[K
+      ./creator+base | [A[██████████] 100% extracting sha256:b3c136eddcbf2003d3180787cef00f39d46b9fd9e4623178282ad6a8d63ad3b0[K
+             context | [          ]   0% transferring ./creator:[K
+             context | transferred 0 file(s) for context ./creator (0 B, 0 file/dir stats)
+             context | [A[██████████] 100% transferring ./creator:[K
+      ./creator+base | --> COPY --if-exists ./artifact /root/artifact
+./creator+create.fixed | --> RUN --no-cache echo $(date) > /root/artifact
+./creator+create.fixed | --> SAVE ARTIFACT /root/artifact ./creator+create.fixed/artifact AS LOCAL ./artifact
+              output | --> exporting outputs
+
+
+ 3. Push ⏫ (disabled)
+————————————————————————————————————————————————————————————————————————————————
+
+To enable pushing use
+
+		earthly --push ...
+
+
+
+ 4. Local Output 🎁
+————————————————————————————————————————————————————————————————————————————————
+
+Artifact ./creator+create.fixed/artifact output as ./artifact
+
+
+========================== 🌍 Earthly Build  ✅ SUCCESS ==========================
+
+Shareable link: https://ci.earthly.dev/logs?logId=07adccc8-abb7-498e-99fb-783af3ab7938
++ check
++ '[' -e creator/artifact ']'
++ echo 'local file exists'
+local file exists
++ earthly ./consumer+consume.fixed
+
+ 1. Init 🚀
+————————————————————————————————————————————————————————————————————————————————
+
+           buildkitd | Found buildkit daemon as docker container (earthly-buildkitd)
+
+
+ 2. Build 🔧
+————————————————————————————————————————————————————————————————————————————————
+
+              alpine | --> Load metadata linux/arm64
+             context | --> local context ./creator
+      ./creator+base | --> FROM alpine
+      ./creator+base | [          ]   0% resolve docker.io/library/alpine@sha256:686d8c9dfa6f3ccfc8230bc3178d23f84eeaf7e457f36f271ab1acc53015037c[K
+      ./creator+base | [A[██████████] 100% resolve docker.io/library/alpine@sha256:686d8c9dfa6f3ccfc8230bc3178d23f84eeaf7e457f36f271ab1acc53015037c[K
+             context | [          ]   0% transferring ./creator:[K
+             context | transferred 1 file(s) for context ./creator (60 B, 1 file/dir stats)
+             context | [A[██████████] 100% transferring ./creator:[K
+      ./creator+base | --> COPY --if-exists ./artifact /root/artifact
+./creator+create.fixed | --> RUN --no-cache echo $(date) > /root/artifact
+./creator+create.fixed | --> SAVE ARTIFACT /root/artifact ./creator+create.fixed/artifact
+./consumer+consume.fixed | --> COPY ../creator+create.fixed/artifact ./artifact
+./consumer+consume.fixed | --> RUN cat artifact
+./consumer+consume.fixed | Mon Jun 27 23:24:15 UTC 2022
+              output | --> exporting outputs
+
+
+ 3. Push ⏫ (disabled)
+————————————————————————————————————————————————————————————————————————————————
+
+To enable pushing use
+
+		earthly --push ...
+
+
+
+ 4. Local Output 🎁
+————————————————————————————————————————————————————————————————————————————————
+
+
+
+========================== 🌍 Earthly Build  ✅ SUCCESS ==========================
+
+Shareable link: https://ci.earthly.dev/logs?logId=630769aa-3bd0-49b6-b848-a15afb29b883
++ '[' 0 = 1 ']'
++ echo 'TEST CASE #1 PASSED'
+TEST CASE #1 PASSED
++ reset
++ rm -rfv creator/artifact
+creator/artifact
++ earthly prune --reset --all
+           buildkitd | Restarting buildkit daemon with reset command...
+           buildkitd | ... Done. Future runs will be faster.
++ echo 'test case #2, run consumer+consume twice. local file should be created one first run and re-used on second run.'
+test case #2, run consumer+consume twice. local file should be created one first run and re-used on second run.
++ earthly ./consumer+consume.fixed
+
+ 1. Init 🚀
+————————————————————————————————————————————————————————————————————————————————
+
+           buildkitd | Found buildkit daemon as docker container (earthly-buildkitd)
+
+
+ 2. Build 🔧
+————————————————————————————————————————————————————————————————————————————————
+
+              alpine | --> Load metadata linux/arm64
+             context | --> local context ./creator
+      ./creator+base | --> FROM alpine
+      ./creator+base | [          ]   0% resolve docker.io/library/alpine@sha256:686d8c9dfa6f3ccfc8230bc3178d23f84eeaf7e457f36f271ab1acc53015037c[K
+      ./creator+base | [A[██████████] 100% resolve docker.io/library/alpine@sha256:686d8c9dfa6f3ccfc8230bc3178d23f84eeaf7e457f36f271ab1acc53015037c[K
+      ./creator+base | [          ]   0% sha256:b3c136eddcbf2003d3180787cef00f39d46b9fd9e4623178282ad6a8d63ad3b0[K
+      ./creator+base | [A[██████████] 100% sha256:b3c136eddcbf2003d3180787cef00f39d46b9fd9e4623178282ad6a8d63ad3b0[K
+      ./creator+base | [          ]   0% extracting sha256:b3c136eddcbf2003d3180787cef00f39d46b9fd9e4623178282ad6a8d63ad3b0[K
+      ./creator+base | [A[██████████] 100% extracting sha256:b3c136eddcbf2003d3180787cef00f39d46b9fd9e4623178282ad6a8d63ad3b0[K
+             context | [          ]   0% transferring ./creator:[K
+             context | transferred 0 file(s) for context ./creator (0 B, 0 file/dir stats)
+             context | [A[██████████] 100% transferring ./creator:[K
+      ./creator+base | --> COPY --if-exists ./artifact /root/artifact
+./creator+create.fixed | --> RUN --no-cache echo $(date) > /root/artifact
+./creator+create.fixed | --> SAVE ARTIFACT /root/artifact ./creator+create.fixed/artifact
+./consumer+consume.fixed | --> COPY ../creator+create.fixed/artifact ./artifact
+./consumer+consume.fixed | --> RUN cat artifact
+./consumer+consume.fixed | Mon Jun 27 23:24:38 UTC 2022
+              output | --> exporting outputs
+
+
+ 3. Push ⏫ (disabled)
+————————————————————————————————————————————————————————————————————————————————
+
+To enable pushing use
+
+		earthly --push ...
+
+
+
+ 4. Local Output 🎁
+————————————————————————————————————————————————————————————————————————————————
+
+
+
+========================== 🌍 Earthly Build  ✅ SUCCESS ==========================
+
+Shareable link: https://ci.earthly.dev/logs?logId=fec501b2-e8fd-4bc1-91a7-129522658787
++ '[' 0 = 1 ']'
++ echo 'TEST CASE #2.1 PASSED'
+TEST CASE #2.1 PASSED
++ echo 'skip reset and re-run'
+skip reset and re-run
++ earthly ./consumer+consume.fixed
+
+ 1. Init 🚀
+————————————————————————————————————————————————————————————————————————————————
+
+           buildkitd | Found buildkit daemon as docker container (earthly-buildkitd)
+
+
+ 2. Build 🔧
+————————————————————————————————————————————————————————————————————————————————
+
+              alpine | --> Load metadata linux/arm64
+             context | --> local context ./creator
+      ./creator+base | --> FROM alpine
+      ./creator+base | [          ]   0% resolve docker.io/library/alpine@sha256:686d8c9dfa6f3ccfc8230bc3178d23f84eeaf7e457f36f271ab1acc53015037c[K
+      ./creator+base | [A[██████████] 100% resolve docker.io/library/alpine@sha256:686d8c9dfa6f3ccfc8230bc3178d23f84eeaf7e457f36f271ab1acc53015037c[K
+             context | [          ]   0% transferring ./creator:[K
+             context | transferred 0 file(s) for context ./creator (0 B, 0 file/dir stats)
+             context | [A[██████████] 100% transferring ./creator:[K
+      ./creator+base | *cached* --> COPY --if-exists ./artifact /root/artifact
+./creator+create.fixed | --> RUN --no-cache echo $(date) > /root/artifact
+./creator+create.fixed | --> SAVE ARTIFACT /root/artifact ./creator+create.fixed/artifact
+./consumer+consume.fixed | --> COPY ../creator+create.fixed/artifact ./artifact
+./consumer+consume.fixed | --> RUN cat artifact
+./consumer+consume.fixed | Mon Jun 27 23:24:45 UTC 2022
+              output | --> exporting outputs
+
+
+ 3. Push ⏫ (disabled)
+————————————————————————————————————————————————————————————————————————————————
+
+To enable pushing use
+
+		earthly --push ...
+
+
+
+ 4. Local Output 🎁
+————————————————————————————————————————————————————————————————————————————————
+
+
+
+========================== 🌍 Earthly Build  ✅ SUCCESS ==========================
+
+Shareable link: https://ci.earthly.dev/logs?logId=a66f672a-a680-4800-baf4-b6f3d7d510e6
++ '[' 0 = 1 ']'
++ echo 'TEST CASE #2.2 PASSED'
+TEST CASE #2.2 PASSED
++ check
++ '[' -e creator/artifact ']'
++ echo 'local file doesn'\''t exist'
+local file doesn't exist

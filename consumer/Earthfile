@@ -1,0 +1,10 @@
+VERSION 0.6
+FROM alpine
+
+consume:
+  COPY ../creator+create/artifact ./artifact
+  RUN cat artifact
+
+consume.fixed:
+  COPY ../creator+create.fixed/artifact ./artifact
+  RUN cat artifact
